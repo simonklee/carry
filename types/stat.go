@@ -28,13 +28,3 @@ func (s *Stat) String() string {
 	return fmt.Sprintf("stat: %s, status: %f, timestamp: %v, type: %d",
 		s.Key, s.Value, time.Unix(s.Timestamp, 0).UTC(), s.Type)
 }
-
-func abs(x int) int {
-	switch {
-	case x < 0:
-		return -x
-	case x == 0:
-		return 0 // return correctly abs(-0)
-	}
-	return x
-}

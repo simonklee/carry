@@ -16,6 +16,7 @@ import (
 
 type stathatStorage struct {
 	key string
+	w   carry.StatsWriter
 }
 
 func (s *stathatStorage) String() string {
@@ -23,11 +24,24 @@ func (s *stathatStorage) String() string {
 }
 
 func newFromConfig(conf *config.Config) (carry.Storage, error) {
+	var w carry.StatsWriter
+
+	k := conf.Stathat.Key
+	w = NewStathatWriter(k)
+
+	if conf.Periodic {
+		w = carry.NewPeriodicWriter(w)
+	}
+
 	return &stathatStorage{
-		key: conf.Stathat.Key,
+		key: k,
+		w:   w,
 	}, nil
 }
 
 func init() {
 	carry.RegisterStorageConstructor("stathat", carry.StorageConstructor(newFromConfig))
 }
+
+// compile check to verify stathat implements carry.ShutdownStorage
+var _ carry.ShutdownStorage = &stathatStorage{}

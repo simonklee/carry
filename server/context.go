@@ -17,7 +17,8 @@ type context struct {
 }
 
 func newContextFromConfig(conf *config.Config) (*context, error) {
-	storage, err := carry.CreateStorage("todo", conf)
+	// TODO: just have stathat storage for now.
+	storage, err := carry.CreateStorage("stathat", conf)
 
 	if err != nil {
 		return nil, err

@@ -12,5 +12,5 @@ import (
 // ReceiveStats implements the interface for receiving stats.
 func (s *stathatStorage) ReceiveStats(stats []*types.Stat) error {
 	log.Printf("stathat: receive %d stats", len(stats))
-	return nil
+	return s.w.Write(stats)
 }

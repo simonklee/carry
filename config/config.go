@@ -10,6 +10,7 @@ import (
 
 type Config struct {
 	Listen   string
+	Periodic bool
 	Stathat  *Stathat
 	Graphite *Graphite
 }
