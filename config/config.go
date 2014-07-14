@@ -9,10 +9,11 @@ import (
 )
 
 type Config struct {
-	Listen   string
-	Periodic bool
-	Stathat  *Stathat
-	Graphite *Graphite
+	Listen      string
+	Periodic    bool
+	AllowOrigin []string
+	Stathat     *Stathat
+	Graphite    *Graphite
 }
 
 type Stathat struct {
@@ -26,5 +27,10 @@ type Graphite struct {
 func ReadFile(filename string) (*Config, error) {
 	config := new(Config)
 	_, err := toml.DecodeFile(filename, config)
+
+	if len(config.AllowOrigin) == 0 {
+		config.AllowOrigin = []string{"*"}
+	}
+
 	return config, err
 }

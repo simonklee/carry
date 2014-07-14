@@ -39,43 +39,43 @@
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/assert",
-			"Rev": "371e333d03d7046e2822fdb0a07e4a5cd731b450"
+			"Rev": "0e4d6287e64a9047090fc04f2268064f752d05e0"
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/handler",
-			"Rev": "371e333d03d7046e2822fdb0a07e4a5cd731b450"
+			"Rev": "0e4d6287e64a9047090fc04f2268064f752d05e0"
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/httputil",
-			"Rev": "371e333d03d7046e2822fdb0a07e4a5cd731b450"
+			"Rev": "0e4d6287e64a9047090fc04f2268064f752d05e0"
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/ioutil",
-			"Rev": "371e333d03d7046e2822fdb0a07e4a5cd731b450"
+			"Rev": "0e4d6287e64a9047090fc04f2268064f752d05e0"
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/kvstore",
-			"Rev": "371e333d03d7046e2822fdb0a07e4a5cd731b450"
+			"Rev": "0e4d6287e64a9047090fc04f2268064f752d05e0"
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/log",
-			"Rev": "371e333d03d7046e2822fdb0a07e4a5cd731b450"
+			"Rev": "0e4d6287e64a9047090fc04f2268064f752d05e0"
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/pat",
-			"Rev": "371e333d03d7046e2822fdb0a07e4a5cd731b450"
+			"Rev": "0e4d6287e64a9047090fc04f2268064f752d05e0"
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/raven",
-			"Rev": "371e333d03d7046e2822fdb0a07e4a5cd731b450"
+			"Rev": "0e4d6287e64a9047090fc04f2268064f752d05e0"
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/session",
-			"Rev": "371e333d03d7046e2822fdb0a07e4a5cd731b450"
+			"Rev": "0e4d6287e64a9047090fc04f2268064f752d05e0"
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/sig",
-			"Rev": "371e333d03d7046e2822fdb0a07e4a5cd731b450"
+			"Rev": "0e4d6287e64a9047090fc04f2268064f752d05e0"
 		}
 	]
 }

@@ -12,7 +12,8 @@ import (
 )
 
 type context struct {
-	sto carry.Storage
+	sto         carry.Storage
+	allowOrigin []string
 }
 
 func newContextFromConfig(conf *config.Config) (*context, error) {
@@ -26,7 +27,10 @@ func newContextFromConfig(conf *config.Config) (*context, error) {
 		return nil, err
 	}
 
-	return &context{sto: storage}, nil
+	return &context{
+		sto:         storage,
+		allowOrigin: conf.AllowOrigin,
+	}, nil
 }
 
 func (c *context) Close() error {
