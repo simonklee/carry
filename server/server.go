@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT-style
 // license that can be found in the LICENSE file.
 
-// Package server implements a HTTP interface for the social service.
+// Package server implements a HTTP interface for the carry service.
 
 package server
 

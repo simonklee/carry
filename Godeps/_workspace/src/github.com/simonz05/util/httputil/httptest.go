@@ -1,4 +1,8 @@
-package httptest
+// Copyright 2014 Simon Zimmermann. All rights reserved.
+// Use of this source code is governed by a MIT-style
+// license that can be found in the LICENSE file.
+
+package httputil
 
 import (
 	"bufio"
@@ -16,6 +20,7 @@ import (
 type Request http.Request
 type Response http.Response
 
+// NewRequest wraps http.Request
 func NewRequest(method string, uri string, body interface{}, params url.Values) (*Request, error) {
 	method = strings.ToUpper(method)
 
@@ -116,90 +121,3 @@ func joinURL(endpoint string, args url.Values) string {
 
 	return endpoint + params
 }
-
-// type HTTPTest struct {
-// 	Method     string
-// 	URL        string
-// 	Body       interface{}
-// 	Args       url.Values
-// 	StatusCode int
-// }
-//
-// func NewHTTPTest(method string, url string, body interface{}, args url.Values, statusCode int) *HTTPTest {
-// 	return &HTTPTest{method, url, body, args, statusCode}
-// }
-//
-// func (h *HTTPTest) String() string {
-// 	var args string
-// 	var body string
-//
-// 	if h.Args != nil {
-// 		args = "?" + h.Args.Encode()
-// 	}
-//
-// 	if h.Body != nil {
-// 		body = fmt.Sprintf(" %s", h.Body)
-// 	}
-//
-// 	return fmt.Sprintf("%s\t%s%s%s %d", h.Method, h.URL, args, body, h.StatusCode)
-// }
-//
-// func (v *HTTPTest) Test(t *testing.T) *http.Response {
-// 	if v.Body != nil && (v.Method == "GET" || v.Method == "DELETE") {
-// 		t.Fatalf("%s unexcepted body - ERR", v)
-// 	}
-//
-// 	body, err := toURL(v.Body)
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
-// 	uri := joinURL(v.URL, v.Args)
-// 	req, _ := http.NewRequest(v.Method, uri, strings.NewReader(body.Encode()))
-//
-// 	if v.Method == "POST" || v.Method == "PUT" {
-// 		req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-// 	}
-//
-// 	client := &http.Client{}
-// 	r, err := client.Do(req)
-//
-// 	if err != nil {
-// 		t.Fatalf("%s: err sending HTTP request: %s", v, err)
-// 	}
-//
-// 	if r.StatusCode != v.StatusCode {
-// 		if r.StatusCode == 400 {
-// 			errRes := ReadErrResponse(t, r)
-//
-// 			for k, v := range errRes.Error {
-// 				fmt.Println(k, v)
-// 			}
-// 		}
-//
-// 		t.Fatalf("%s: expected status code %d, got %d", v, v.StatusCode, r.StatusCode)
-// 	}
-//
-// 	fmt.Printf("%s - OK\n", v)
-// 	return r
-// }
-//
-// func ParseResponse(res *http.Response, v interface{}) error {
-// 	defer res.Body.Close()
-//
-// 	if c := res.Header.Get("Content-Type"); !strings.Contains(c, "application/json") {
-// 		return fmt.Errorf("Unexpected Content-Type, got %s", c)
-// 	}
-//
-// 	reader := bufio.NewReader(res.Body)
-// 	buf, _ := ioutil.ReadAll(reader)
-// 	err := json.Unmarshal(buf, v)
-// 	//fmt.Printf("%s\n", buf)
-// 	//err := json.NewDecoder(res.Body).Decode(v)
-// 	return err
-// }
-//
-// func ReadErrResponse(t *testing.T, res *http.Response) *DataErrResponse {
-// 	v := new(DataErrResponse)
-// 	ParseResponse(res, v)
-// 	return v
-// }

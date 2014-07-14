@@ -11,8 +11,8 @@ import (
 
 	"github.com/simonz05/carry/storagetest"
 	"github.com/simonz05/carry/types"
-	httputil "github.com/simonz05/social/server/httptest"
 	"github.com/simonz05/util/assert"
+	"github.com/simonz05/util/httputil"
 	"github.com/simonz05/util/log"
 )
 
