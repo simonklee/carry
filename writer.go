@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/simonz05/carry/types"
+	"github.com/simonz05/util/log"
 )
 
 type StatsWriter interface {
@@ -63,49 +64,69 @@ func NewPeriodicWriter(w StatsWriter) *PeriodicWriter {
 	pw := &PeriodicWriter{
 		buf:    newStatsBuffer(w),
 		in:     make(chan []*types.Stat, 1024),
-		period: (100 * time.Millisecond),
+		period: (1 * time.Second),
 	}
 
 	pw.wg.Add(1)
 	go func() {
 		pw.process()
 		pw.wg.Done()
+		log.Println("pw.wg.done")
 	}()
 
 	return pw
 }
 
 func (pw *PeriodicWriter) process() {
-	var lastWrite time.Time
+	lastWrite := time.Now()
 
 	for {
 		now := time.Now()
 		dt := pw.period - now.Sub(lastWrite)
-
 		select {
-		case stats := <-pw.in:
-			pw.buf.Write(stats)
+		case stats, ok := <-pw.in:
+			if !ok {
+				log.Println("PeriodicWriter chan closed, flush … exit")
+				err := pw.buf.Flush()
+				if err != nil {
+					log.Error(err)
+				}
+				return
+			}
+
+			err := pw.buf.Write(stats)
+
+			if err != nil {
+				log.Error(err)
+			}
 		case <-time.After(dt):
-			pw.buf.Flush()
+			log.Printf("PeriodicWriter writing after %v", time.Since(lastWrite))
+			err := pw.buf.Flush()
+			if err != nil {
+				log.Error(err)
+			}
 			lastWrite = time.Now()
 		}
 	}
 }
 
 func (pw *PeriodicWriter) Close() error {
+	log.Println("Closing PeriodicWriter")
 	close(pw.in)
 	done := make(chan bool)
 
-	func(done chan bool) {
+	go func(done chan bool) {
 		pw.wg.Wait()
 		done <- true
 	}(done)
 
 	select {
 	case <-done:
+		break
 	case <-time.After(1 * time.Second):
 		return fmt.Errorf("Timed out")
 	}
+	log.Println("PeriodicWriter Closed")
 	return nil
 }
 
