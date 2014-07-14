@@ -4,14 +4,12 @@
 
 package config
 
-import (
-	"github.com/BurntSushi/toml"
-)
+import "github.com/BurntSushi/toml"
 
 type Config struct {
 	Listen      string
 	Periodic    bool
-	AllowOrigin []string
+	AllowOrigin []string `toml:"allow-origin"`
 	Stathat     *Stathat
 	Graphite    *Graphite
 }

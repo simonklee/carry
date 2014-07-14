@@ -41,6 +41,7 @@ func installHandlers(c *context) error {
 	sub := router.PathPrefix("/v1/stat").Subrouter()
 
 	pat.Post(sub, "/p/", http.HandlerFunc(c.createStat))
+	pat.Head(sub, "/p/", http.HandlerFunc(c.headStat))
 
 	// global middleware
 	var middleware []func(http.Handler) http.Handler

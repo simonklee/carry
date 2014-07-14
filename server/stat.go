@@ -39,3 +39,7 @@ func (c *context) createStat(rw http.ResponseWriter, req *http.Request) {
 
 	rw.WriteHeader(http.StatusCreated)
 }
+
+func (c *context) headStat(rw http.ResponseWriter, req *http.Request) {
+	rw.WriteHeader(http.StatusOK)
+}
