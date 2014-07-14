@@ -30,10 +30,16 @@ func Test(t *testing.T, fn func(*testing.T) (sto carry.Storage, cleanup func()))
 			n: "single-ok",
 			s: []*types.Stat{
 				{
-					Key:       "k",
+					Key:       "key.value",
 					Value:     3.14,
 					Timestamp: now.Unix(),
 					Type:      types.ValueKind,
+				},
+				{
+					Key:       "key.cnt",
+					Value:     2,
+					Timestamp: now.Unix(),
+					Type:      types.CounterKind,
 				},
 			},
 		},
@@ -41,16 +47,28 @@ func Test(t *testing.T, fn func(*testing.T) (sto carry.Storage, cleanup func()))
 			n: "multi-ok",
 			s: []*types.Stat{
 				{
-					Key:       "k",
+					Key:       "key.value",
 					Value:     3.14,
-					Timestamp: time.Now().Unix(),
+					Timestamp: now.Unix() + 1,
 					Type:      types.ValueKind,
 				},
 				{
-					Key:       "k",
+					Key:       "key.value",
 					Value:     1.618,
-					Timestamp: time.Now().Unix(),
+					Timestamp: now.Unix() + 2,
 					Type:      types.ValueKind,
+				},
+				{
+					Key:       "key.value",
+					Value:     8.50,
+					Timestamp: now.Unix() + 3,
+					Type:      types.ValueKind,
+				},
+				{
+					Key:       "key.cnt",
+					Value:     1,
+					Timestamp: now.Unix(),
+					Type:      types.CounterKind,
 				},
 			},
 		},

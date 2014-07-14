@@ -35,11 +35,22 @@ func TestStathat(t *testing.T) {
 	conf := readConf(t)
 	storagetest.Test(t, func(t *testing.T) (sto carry.Storage, cleanup func()) {
 		sto, err := newFromConfig(conf)
+
 		if err != nil {
 			t.Fatalf("newFromConfig error: %v", err)
 		}
+
+		closer, ok := sto.(carry.ShutdownStorage)
+
+		if !ok {
+			t.Fatalf("expected stathat shutdown storage")
+		}
+
 		return sto, func() {
-			// cleanup
+			log.Println("cleanup stathat")
+			if err := closer.Close(); err != nil {
+				t.Fatal(err)
+			}
 		}
 	})
 }

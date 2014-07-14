@@ -56,8 +56,8 @@ func installHandlers(c *context) error {
 	return nil
 }
 
-func ListenAndServe(conf *config.Config, shutdown io.Closer) error {
-	l, err := net.Listen("tcp", conf.Listen)
+func ListenAndServe(laddr string, closer io.Closer) error {
+	l, err := net.Listen("tcp", laddr)
 
 	if err != nil {
 		return err
@@ -65,7 +65,7 @@ func ListenAndServe(conf *config.Config, shutdown io.Closer) error {
 
 	log.Printf("Listen on %s", l.Addr())
 
-	closer := ioutil.MultiCloser([]io.Closer{l, shutdown})
+	closer = ioutil.MultiCloser([]io.Closer{l, closer})
 	sig.TrapCloser(closer)
 	err = http.Serve(l, nil)
 	log.Printf("Shutting down ..")

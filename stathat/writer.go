@@ -56,7 +56,6 @@ func (sw *StathatWriter) Write(stats []*types.Stat) error {
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Length", strconv.Itoa(buflen))
 	res, err := http.DefaultClient.Do(req)
-
-	log.Println(res)
+	log.Println(res.Request.URL)
 	return err
 }

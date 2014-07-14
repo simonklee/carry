@@ -4,12 +4,17 @@
 
 package stathat
 
-import "io"
+import (
+	"io"
+
+	"github.com/simonz05/util/log"
+)
 
 // Close cleanly shutdown the Stathat
 func (s *stathatStorage) Close() error {
 	closer, ok := s.w.(io.Closer)
 	if ok {
+		log.Println("close stathat")
 		return closer.Close()
 	}
 	return nil
