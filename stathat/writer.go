@@ -53,6 +53,8 @@ func (sw *StathatWriter) Write(stats []*types.Stat) error {
 		return err
 	}
 
+	b, _ := json.Marshal(pkg)
+	log.Println("sending stats: ", string(b))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Length", strconv.Itoa(buflen))
 	res, err := http.DefaultClient.Do(req)

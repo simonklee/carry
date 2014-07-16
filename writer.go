@@ -100,7 +100,7 @@ func (pw *PeriodicWriter) process() {
 				log.Error(err)
 			}
 		case <-time.After(dt):
-			log.Printf("PeriodicWriter writing after %v", time.Since(lastWrite))
+			//log.Printf("PeriodicWriter writing after %v", time.Since(lastWrite))
 			err := pw.buf.Flush()
 			if err != nil {
 				log.Error(err)

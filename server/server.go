@@ -42,6 +42,7 @@ func installHandlers(c *context) error {
 
 	pat.Post(sub, "/p/", http.HandlerFunc(c.createStat))
 	pat.Head(sub, "/p/", http.HandlerFunc(c.headStat))
+	pat.Options(sub, "/p/", http.HandlerFunc(c.headStat))
 
 	// global middleware
 	var middleware []func(http.Handler) http.Handler

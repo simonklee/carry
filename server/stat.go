@@ -7,6 +7,7 @@ package server
 import (
 	"encoding/json"
 	"net/http"
+	"time"
 
 	"github.com/simonz05/carry/types"
 	"github.com/simonz05/util/httputil"
@@ -25,8 +26,18 @@ func (c *context) createStat(rw http.ResponseWriter, req *http.Request) {
 
 	if err != nil {
 		log.Error(err)
-		httputil.ServeJSONCodeError(rw, "JSON Decode Error", http.StatusBadGateway)
+		httputil.ServeJSONCodeError(rw, "JSON Decode Error", http.StatusBadRequest)
 		return
+	}
+
+	if len(stats) > 0 {
+		now := time.Now().Unix()
+
+		for _, s := range stats {
+			if s.Timestamp == 0 {
+				s.Timestamp = now
+			}
+		}
 	}
 
 	err = c.sto.ReceiveStats(stats)
@@ -41,5 +52,8 @@ func (c *context) createStat(rw http.ResponseWriter, req *http.Request) {
 }
 
 func (c *context) headStat(rw http.ResponseWriter, req *http.Request) {
+	rw.Header().Set("Access-Control-Allow-Methods", "PUT, DELETE, GET, POST, HEAD, OPTIONS")
+	rw.Header().Set("Access-Control-Allow-Headers", "Content-Type, Accept, *")
+	//rw.Header().Add("Access-Control-Allow-Headers", "origin, x-csrftoken, content-type, accept")
 	rw.WriteHeader(http.StatusOK)
 }

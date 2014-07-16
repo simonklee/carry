@@ -17,6 +17,18 @@ const (
 	ValueKind
 )
 
+func (s *StatKind) UnmarshalJSON(data []byte) error {
+	switch string(data) {
+	case `"value"`:
+		*s = ValueKind
+	case `"count"`:
+		*s = CounterKind
+	default:
+		return fmt.Errorf("invalid StatKind %s", string(data))
+	}
+	return nil
+}
+
 type Stat struct {
 	Key       string   `json:"k"`
 	Value     float64  `json:"v"`
