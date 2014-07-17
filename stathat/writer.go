@@ -48,16 +48,26 @@ func (sw *StathatWriter) Write(stats []*types.Stat) error {
 
 	buflen := rw.Len()
 	req, err := http.NewRequest("POST", "http://api.stathat.com/ez", &rw)
+	//	req.Close = true
 
 	if err != nil {
 		return err
 	}
 
-	b, _ := json.Marshal(pkg)
-	log.Println("sending stats: ", string(b))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Content-Length", strconv.Itoa(buflen))
 	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer res.Body.Close()
 	log.Println(res.Request.URL)
-	return err
+
+	if log.Severity >= log.LevelInfo {
+		b, _ := json.Marshal(pkg)
+		log.Println("sending stats: ", string(b))
+	}
+
+	return nil
 }
