@@ -29,6 +29,16 @@ func (s *StatKind) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+func (s *StatKind) MarshalJSON() ([]byte, error) {
+	switch *s {
+	case ValueKind:
+		return []byte(`"value"`), nil
+	case CounterKind:
+		return []byte(`"count"`), nil
+	}
+	panic("not reached")
+}
+
 type Stat struct {
 	Key       string   `json:"k"`
 	Value     float64  `json:"v"`
