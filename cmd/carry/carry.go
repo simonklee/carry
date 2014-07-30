@@ -13,11 +13,11 @@ import (
 	"runtime"
 	"runtime/pprof"
 
-	"git.tideland.biz/goas/monitoring"
 	"github.com/simonz05/carry/config"
 	"github.com/simonz05/carry/server"
 	_ "github.com/simonz05/carry/stathat"
 	"github.com/simonz05/util/log"
+	"github.com/tideland/goas/v2/monitoring"
 )
 
 var (
