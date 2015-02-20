@@ -135,7 +135,9 @@ func (c *context) createStatGet(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	rw.WriteHeader(http.StatusOK)
+	rw.Header().Add("Cache-Control", "private, no-cache, no-cache=Set-Cookie, proxy-revalidate")
+	rw.Header().Add("Pragma", "no-cache")
+	rw.WriteHeader(http.StatusNoContent)
 }
 
 func (c *context) headStat(rw http.ResponseWriter, req *http.Request) {

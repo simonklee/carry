@@ -153,12 +153,12 @@ func TestGETAPI(t *testing.T) {
 
 		ast.Nil(err)
 
-		if res.StatusCode != 200 {
+		if res.StatusCode != 204 {
 			fmt.Println(req)
 			defer res.Body.Close()
 			content, _ := ioutil.ReadAll(res.Body)
 			fmt.Println(string(content))
-			ast.Equal(200, res.StatusCode)
+			ast.Equal(204, res.StatusCode)
 		}
 	}
 }
