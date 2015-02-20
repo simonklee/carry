@@ -41,6 +41,7 @@ func installHandlers(c *context) error {
 	sub := router.PathPrefix("/v1/stat").Subrouter()
 
 	pat.Post(sub, "/p/", http.HandlerFunc(c.createStat))
+	pat.Get(sub, "/p/", http.HandlerFunc(c.createStatGet))
 	pat.Head(sub, "/p/", http.HandlerFunc(c.headStat))
 	pat.Options(sub, "/p/", http.HandlerFunc(c.headStat))
 

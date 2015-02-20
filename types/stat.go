@@ -39,6 +39,33 @@ func (s *StatKind) MarshalJSON() ([]byte, error) {
 	panic("not reached")
 }
 
+func (s *StatKind) UnmarshalText(data []byte) error {
+	switch string(data) {
+	case "value":
+		*s = ValueKind
+	case "count":
+		*s = CounterKind
+	default:
+		return fmt.Errorf("invalid StatKind %s, len %d", string(data), len(data))
+	}
+	return nil
+}
+
+func (s *StatKind) MarshalText() ([]byte, error) {
+	switch *s {
+	case ValueKind:
+		return []byte("value"), nil
+	case CounterKind:
+		return []byte("count"), nil
+	}
+	panic("not reached")
+}
+
+func (s StatKind) String() string {
+	b, _ := s.MarshalText()
+	return string(b)
+}
+
 type Stat struct {
 	Key       string   `json:"k"`
 	Value     float64  `json:"v"`

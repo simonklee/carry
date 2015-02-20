@@ -6,7 +6,9 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/simonz05/carry/types"
@@ -49,6 +51,91 @@ func (c *context) createStat(rw http.ResponseWriter, req *http.Request) {
 	}
 
 	rw.WriteHeader(http.StatusCreated)
+}
+
+func (c *context) createStatGet(rw http.ResponseWriter, req *http.Request) {
+	err := req.ParseForm()
+
+	if err != nil {
+		rw.WriteHeader(http.StatusInternalServerError)
+		rw.Write([]byte("Internal Server Error"))
+		return
+	}
+
+	keys, ok := req.Form["k"]
+	n := len(keys)
+
+	if !ok || n == 0 {
+		httputil.BadRequestError(rw, "No stats")
+		return
+	}
+
+	stats := make([]*types.Stat, 0, len(keys))
+
+	for _, key := range keys {
+		stats = append(stats, &types.Stat{Key: key})
+	}
+
+	values, ok := req.Form["v"]
+
+	if !ok || n != len(values) {
+		httputil.BadRequestError(rw, fmt.Sprintf("bad value part ok %v, len %d", ok, len(values)))
+		return
+	}
+
+	for i, value := range values {
+		v, err := strconv.ParseFloat(value, 64)
+		if err != nil {
+			httputil.BadRequestError(rw, fmt.Sprintf("bad value part %s %s", value, err))
+			return
+		}
+		stats[i].Value = v
+	}
+
+	times, ok := req.Form["t"]
+
+	if !ok || n != len(times) {
+		httputil.BadRequestError(rw, "bad timestamp part")
+		return
+	}
+
+	for i, ts := range times {
+		t, err := strconv.ParseInt(ts, 10, 64)
+		if err != nil {
+			httputil.BadRequestError(rw, "bad timestamp part")
+			return
+		}
+		stats[i].Timestamp = t
+	}
+
+	kinds, ok := req.Form["c"]
+
+	if !ok || n != len(kinds) {
+		httputil.BadRequestError(rw, "bad stat kind part")
+		return
+	}
+
+	for i, value := range kinds {
+		kind := new(types.StatKind)
+		err := kind.UnmarshalText([]byte(value))
+
+		if err != nil {
+			httputil.BadRequestError(rw, "bad stat kind part")
+			return
+		}
+		stats[i].Type = *kind
+	}
+
+	err = c.sto.ReceiveStats(stats)
+
+	if err != nil {
+		log.Error(err)
+		rw.WriteHeader(http.StatusInternalServerError)
+		rw.Write([]byte("Internal Server Error"))
+		return
+	}
+
+	rw.WriteHeader(http.StatusOK)
 }
 
 func (c *context) headStat(rw http.ResponseWriter, req *http.Request) {

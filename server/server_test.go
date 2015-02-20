@@ -3,6 +3,7 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http/httptest"
 	"net/url"
 	"sync"
@@ -39,7 +40,7 @@ func startServer() {
 	serverAddr = server.Listener.Addr().String()
 }
 
-func TestServer(t *testing.T) {
+func TestJSONAPI(t *testing.T) {
 	once.Do(startServer)
 	ast := assert.NewAssertWithName(t, "TestServer")
 
@@ -93,6 +94,72 @@ func TestServer(t *testing.T) {
 		ast.Nil(err)
 		ast.Equal(201, res.StatusCode)
 		ast.Nil(err)
+	}
+}
+
+func TestGETAPI(t *testing.T) {
+	once.Do(startServer)
+	ast := assert.NewAssertWithName(t, "TestServer")
+
+	tests := []struct {
+		n string
+		b []*types.Stat
+		e error
+	}{
+		{
+			n: "single-ok",
+			b: []*types.Stat{
+				{
+					Key:       "k",
+					Value:     3.14,
+					Timestamp: time.Now().Unix(),
+					Type:      types.ValueKind,
+				},
+			},
+		},
+		{
+			n: "multi-ok",
+			b: []*types.Stat{
+				{
+					Key:       "k",
+					Value:     3.14,
+					Timestamp: time.Now().Unix(),
+					Type:      types.ValueKind,
+				},
+				{
+					Key:       "k",
+					Value:     1.618,
+					Timestamp: time.Now().Unix(),
+					Type:      types.ValueKind,
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		param := url.Values{}
+		if tt.b != nil {
+			for _, s := range tt.b {
+				param.Add("k", s.Key)
+				param.Add("v", fmt.Sprintf("%f", s.Value))
+				param.Add("t", fmt.Sprintf("%d", s.Timestamp))
+				param.Add("c", fmt.Sprintf("%s", s.Type))
+			}
+		}
+		req, err := httputil.NewRequest("GET", absURL("/v1/stat/p/", param), nil, nil)
+		ast.Nil(err)
+		req.Header.Set("Content-Type", "text/plain")
+		res, err := req.Do()
+
+		ast.Nil(err)
+
+		if res.StatusCode != 200 {
+			fmt.Println(req)
+			defer res.Body.Close()
+			content, _ := ioutil.ReadAll(res.Body)
+			fmt.Println(string(content))
+			ast.Equal(200, res.StatusCode)
+		}
 	}
 }
 
