@@ -17,14 +17,36 @@ type context struct {
 }
 
 func newContextFromConfig(conf *config.Config) (*context, error) {
-	// TODO: just have stathat storage for now.
-	if conf.Stathat == nil {
-		return nil, fmt.Errorf("expected stathat storage")
+	// We just have stathat storage for now.
+	if conf.Stathat == nil && conf.InfluxDB == nil {
+		return nil, fmt.Errorf("expected stathat/influxdb storage")
 	}
-	storage, err := carry.CreateStorage("stathat", conf)
 
-	if err != nil {
-		return nil, err
+	var storage carry.Storage
+	var backends []carry.Storage
+
+	if conf.Stathat != nil {
+		sto, err := carry.CreateStorage("stathat", conf)
+		if err != nil {
+			return nil, err
+		}
+		backends = append(backends, sto)
+	}
+
+	if conf.InfluxDB != nil {
+		sto, err := carry.CreateStorage("influxdb", conf)
+
+		if err != nil {
+			return nil, err
+		}
+
+		backends = append(backends, sto)
+	}
+
+	if len(backends) == 1 {
+		storage = backends[0]
+	} else {
+		storage = carry.MultiStorage(backends)
 	}
 
 	return &context{

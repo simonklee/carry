@@ -49,7 +49,7 @@ func installHandlers(c *context) error {
 	var middleware []func(http.Handler) http.Handler
 
 	if log.Severity >= log.LevelInfo {
-		middleware = append(middleware, handler.NewCORSHandler(c.allowOrigin...), handler.LogHandler, handler.MeasureHandler, handler.DebugHandle, handler.RecoveryHandler)
+		middleware = append(middleware, handler.NewCORSHandler(c.allowOrigin...), handler.LogHandler, handler.DebugHandle, handler.RecoveryHandler)
 	} else {
 		middleware = append(middleware, handler.NewCORSHandler(c.allowOrigin...), handler.LogHandler, handler.RecoveryHandler)
 	}

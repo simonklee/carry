@@ -11,15 +11,18 @@ type Config struct {
 	Periodic    bool
 	AllowOrigin []string `toml:"allow-origin"`
 	Stathat     *Stathat
-	Graphite    *Graphite
+	InfluxDB    *InfluxDB `toml:"influxdb"`
 }
 
 type Stathat struct {
 	Key string
 }
 
-type Graphite struct {
-	DSN string `toml:"dsn"`
+type InfluxDB struct {
+	Host     string
+	Password string
+	Username string
+	Database string
 }
 
 func ReadFile(filename string) (*Config, error) {

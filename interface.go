@@ -36,3 +36,32 @@ type ShutdownStorage interface {
 type Loader interface {
 	GetStorage() (Storage, error)
 }
+
+// MultiStorage implements the storage interface for many storage backends.
+type MultiStorage []Storage
+
+// ReceiveStats implements StatsReceiver.
+func (ms MultiStorage) ReceiveStats(stats []*types.Stat) (err error) {
+	for _, s := range ms {
+		if err1 := s.ReceiveStats(stats); err == nil && err1 != nil {
+			err = err1
+		}
+	}
+	return
+}
+
+// ReceiveStats implements io.Closer.
+func (ms MultiStorage) Close() (err error) {
+	for _, s := range ms {
+		cl, ok := s.(ShutdownStorage)
+
+		if !ok {
+			continue
+		}
+
+		if err1 := cl.Close(); err == nil && err1 != nil {
+			err = err1
+		}
+	}
+	return
+}
