@@ -16,7 +16,6 @@ import (
 	"github.com/simonz05/carry/config"
 	"github.com/simonz05/carry/server"
 	"github.com/simonz05/util/log"
-	"github.com/tideland/goas/v2/monitoring"
 
 	_ "github.com/simonz05/carry/influxdb"
 	_ "github.com/simonz05/carry/stathat"
@@ -87,6 +86,4 @@ func main() {
 	if err != nil {
 		log.Errorln(err)
 	}
-
-	monitoring.MeasuringPointsPrintAll()
 }
