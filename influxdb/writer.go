@@ -6,6 +6,7 @@ package influxdb
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/influxdb/influxdb/client"
 	"github.com/simonz05/carry/types"
@@ -14,30 +15,36 @@ import (
 
 type InfluxDBWriter struct {
 	client *client.Client
+	db     string
 }
 
-func NewInfluxDBWriter(c *client.Client) *InfluxDBWriter {
-	return &InfluxDBWriter{client: c}
+func NewInfluxDBWriter(c *client.Client, db string) *InfluxDBWriter {
+	return &InfluxDBWriter{client: c, db: db}
 }
 
 func (iw *InfluxDBWriter) Write(stats []*types.Stat) error {
-	data := make([]*client.Series, len(stats))
+	points := make([]client.Point, len(stats))
 
 	// todo group similar keys.
 	for i, stat := range stats {
-		data[i] = &client.Series{
-			Columns: []string{"time", "value"},
-			Name:    stat.Key,
-			Points: [][]interface{}{
-				{stat.Timestamp, stat.Value},
+		points[i] = client.Point{
+			Name: stat.Key,
+			Fields: map[string]interface{}{
+				"value": stat.Value,
 			},
+			Time: time.Unix(stat.Timestamp, 0),
 		}
 	}
 
 	if log.Severity >= log.LevelInfo {
-		b, _ := json.Marshal(data)
+		b, _ := json.Marshal(points)
 		log.Println("sending stats: ", string(b))
 	}
 
-	return iw.client.WriteSeries(data)
+	packet := client.BatchPoints{
+		Points:   points,
+		Database: iw.db,
+	}
+	_, err := iw.client.Write(packet)
+	return err
 }

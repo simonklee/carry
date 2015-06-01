@@ -9,6 +9,7 @@ import (
 
 	"github.com/simonz05/carry"
 	"github.com/simonz05/carry/config"
+	"github.com/simonz05/util/log"
 )
 
 type context struct {
@@ -31,6 +32,7 @@ func newContextFromConfig(conf *config.Config) (*context, error) {
 			return nil, err
 		}
 		backends = append(backends, sto)
+		log.Println("stathat storage initialized")
 	}
 
 	if conf.InfluxDB != nil {
@@ -41,6 +43,7 @@ func newContextFromConfig(conf *config.Config) (*context, error) {
 		}
 
 		backends = append(backends, sto)
+		log.Println("influxdb storage initialized")
 	}
 
 	if len(backends) == 1 {

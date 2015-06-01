@@ -19,7 +19,7 @@ type Stathat struct {
 }
 
 type InfluxDB struct {
-	Host     string
+	URL      string
 	Password string
 	Username string
 	Database string

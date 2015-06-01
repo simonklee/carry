@@ -9,6 +9,7 @@ package influxdb
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/influxdb/influxdb/client"
 
@@ -17,31 +18,35 @@ import (
 )
 
 type influxdbStorage struct {
-	config client.ClientConfig
+	config client.Config
 	client *client.Client
 	w      carry.StatsWriter
 }
 
 func (s *influxdbStorage) String() string {
-	return fmt.Sprintf("\"influxdb\" storage for %q", s.config.Host)
+	return fmt.Sprintf("\"influxdb\" storage for %q", s.config.URL)
 }
 
 func newFromConfig(conf *config.Config) (carry.Storage, error) {
-	cConfig := client.ClientConfig{
-		Host:     conf.InfluxDB.Host,
-		Database: conf.InfluxDB.Database,
+	host, err := url.Parse(conf.InfluxDB.URL)
+	if err != nil {
+		return nil, err
+	}
+
+	cConfig := client.Config{
+		URL:      *host,
 		Password: conf.InfluxDB.Password,
 		Username: conf.InfluxDB.Username,
 	}
 
-	c, err := client.New(&cConfig)
+	c, err := client.NewClient(cConfig)
 
 	if err != nil {
 		return nil, err
 	}
 
 	var w carry.StatsWriter
-	w = NewInfluxDBWriter(c)
+	w = NewInfluxDBWriter(c, conf.InfluxDB.Database)
 
 	if conf.Periodic {
 		w = carry.NewPeriodicWriter(w)

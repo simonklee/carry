@@ -24,8 +24,13 @@
 		},
 		{
 			"ImportPath": "github.com/influxdb/influxdb/client",
-			"Comment": "v0.8.8",
-			"Rev": "afde71eb1740fd763ab9450e1f700ba0e53c36d0"
+			"Comment": "v0.9.0-rc31",
+			"Rev": "8ade485b5865e642b128a7cc6eb20c9da73d1b48"
+		},
+		{
+			"ImportPath": "github.com/influxdb/influxdb/influxql",
+			"Comment": "v0.9.0-rc31",
+			"Rev": "8ade485b5865e642b128a7cc6eb20c9da73d1b48"
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/assert",
