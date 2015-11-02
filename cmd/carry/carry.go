@@ -17,7 +17,6 @@ import (
 	"github.com/simonz05/carry/server"
 	"github.com/simonz05/util/log"
 
-	_ "github.com/simonz05/carry/influxdb"
 	_ "github.com/simonz05/carry/stathat"
 )
 
