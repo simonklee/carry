@@ -33,6 +33,20 @@ func NewParser(r io.Reader) *Parser {
 // ParseQuery parses a query string and returns its AST representation.
 func ParseQuery(s string) (*Query, error) { return NewParser(strings.NewReader(s)).ParseQuery() }
 
+// ParseStatement parses a statement string and returns its AST representation.
+func ParseStatement(s string) (Statement, error) {
+	return NewParser(strings.NewReader(s)).ParseStatement()
+}
+
+// MustParseStatement parses a statement string and returns its AST. Panic on error.
+func MustParseStatement(s string) Statement {
+	stmt, err := ParseStatement(s)
+	if err != nil {
+		panic(err.Error())
+	}
+	return stmt
+}
+
 // ParseExpr parses an expression string and returns its AST representation.
 func ParseExpr(s string) (Expr, error) { return NewParser(strings.NewReader(s)).ParseExpr() }
 
@@ -768,7 +782,7 @@ func (p *Parser) parseShowSeriesStatement() (*ShowSeriesStatement, error) {
 
 	// Parse optional FROM.
 	if tok, _, _ := p.scanIgnoreWhitespace(); tok == FROM {
-		if stmt.Source, err = p.parseSource(); err != nil {
+		if stmt.Sources, err = p.parseSources(); err != nil {
 			return nil, err
 		}
 	} else {
@@ -849,7 +863,7 @@ func (p *Parser) parseShowTagKeysStatement() (*ShowTagKeysStatement, error) {
 
 	// Parse optional source.
 	if tok, _, _ := p.scanIgnoreWhitespace(); tok == FROM {
-		if stmt.Source, err = p.parseSource(); err != nil {
+		if stmt.Sources, err = p.parseSources(); err != nil {
 			return nil, err
 		}
 	} else {
@@ -887,7 +901,7 @@ func (p *Parser) parseShowTagValuesStatement() (*ShowTagValuesStatement, error) 
 
 	// Parse optional source.
 	if tok, _, _ := p.scanIgnoreWhitespace(); tok == FROM {
-		if stmt.Source, err = p.parseSource(); err != nil {
+		if stmt.Sources, err = p.parseSources(); err != nil {
 			return nil, err
 		}
 	} else {
@@ -977,7 +991,7 @@ func (p *Parser) parseShowFieldKeysStatement() (*ShowFieldKeysStatement, error) 
 
 	// Parse optional source.
 	if tok, _, _ := p.scanIgnoreWhitespace(); tok == FROM {
-		if stmt.Source, err = p.parseSource(); err != nil {
+		if stmt.Sources, err = p.parseSources(); err != nil {
 			return nil, err
 		}
 	} else {
@@ -1670,22 +1684,13 @@ func (p *Parser) parseSortFields() (SortFields, error) {
 func (p *Parser) parseSortField() (*SortField, error) {
 	field := &SortField{}
 
-	// Next token should be ASC, DESC, or IDENT | STRING.
-	tok, pos, lit := p.scanIgnoreWhitespace()
-	if tok == IDENT || tok == STRING {
-		field.Name = lit
-		// Check for optional ASC or DESC token.
-		tok, pos, lit = p.scanIgnoreWhitespace()
-		if tok != ASC && tok != DESC {
-			p.unscan()
-			return field, nil
-		}
-	} else if tok != ASC && tok != DESC {
-		return nil, newParseError(tokstr(tok, lit), []string{"identifier, ASC, or DESC"}, pos)
+	// Next token must be ASC, until other sort orders are supported.
+	tok, _, _ := p.scanIgnoreWhitespace()
+	if tok != ASC {
+		return nil, errors.New("only ORDER BY ASC supported at this time")
 	}
 
-	field.Ascending = (tok == ASC)
-
+	field.Ascending = true
 	return field, nil
 }
 
