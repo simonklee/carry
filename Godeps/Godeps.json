@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/simonz05/carry",
-	"GoVersion": "go1.5.1",
+	"GoVersion": "go1.5.2",
 	"Packages": [
 		"./..."
 	],
@@ -11,15 +11,6 @@
 			"Rev": "056c9bc7be7190eaa7715723883caffa5f8fa3e4"
 		},
 		{
-			"ImportPath": "github.com/armon/go-metrics",
-			"Rev": "6c5fa0d8f48f4661c9ba8709799c88d425ad20f0"
-		},
-		{
-			"ImportPath": "github.com/boltdb/bolt",
-			"Comment": "v1.0-111-g04a3e85",
-			"Rev": "04a3e85793043e76d41164037d0d7f9d53eecae3"
-		},
-		{
 			"ImportPath": "github.com/garyburd/redigo/internal",
 			"Rev": "7ec56c98db25aa5eeed5e028188fda8fe6fb4bf3"
 		},
@@ -28,38 +19,12 @@
 			"Rev": "7ec56c98db25aa5eeed5e028188fda8fe6fb4bf3"
 		},
 		{
-			"ImportPath": "github.com/gogo/protobuf/proto",
-			"Comment": "v0.1-58-g2008751",
-			"Rev": "200875106f3bf0eb01eb297dae30b250a25ffc84"
-		},
-		{
-			"ImportPath": "github.com/golang/protobuf/proto",
-			"Rev": "aece6fb931241ad332956db4f62798dfbea944b3"
-		},
-		{
 			"ImportPath": "github.com/gorilla/context",
 			"Rev": "1c83b3eabd45b6d76072b66b746c20815fb2872d"
 		},
 		{
 			"ImportPath": "github.com/gorilla/mux",
 			"Rev": "ad4d7a5882b961e07e2626045eb995c022ac6664"
-		},
-		{
-			"ImportPath": "github.com/hashicorp/go-msgpack/codec",
-			"Rev": "fa3f63826f7c23912c15263591e65d54d080b458"
-		},
-		{
-			"ImportPath": "github.com/hashicorp/raft",
-			"Rev": "1f230096d08c6e6a039048f38ba04da329c22cf3"
-		},
-		{
-			"ImportPath": "github.com/hashicorp/raft-boltdb",
-			"Rev": "d1e82c1ec3f15ee991f7cc7ffd5b67ff6f5bbaee"
-		},
-		{
-			"ImportPath": "github.com/influxdb/influxdb",
-			"Comment": "v0.9.0",
-			"Rev": "471117ce5b308e59f8f247d8a88a52ead553b602"
 		},
 		{
 			"ImportPath": "github.com/simonz05/util/assert",
@@ -120,14 +85,6 @@
 		{
 			"ImportPath": "github.com/tideland/goas/v3/errors",
 			"Rev": "a5340c51dbd8e4e2794658723047cb47c099be9f"
-		},
-		{
-			"ImportPath": "golang.org/x/crypto/bcrypt",
-			"Rev": "c10c31b5e94b6f7a0283272dc2bb27163dcea24b"
-		},
-		{
-			"ImportPath": "golang.org/x/crypto/blowfish",
-			"Rev": "c10c31b5e94b6f7a0283272dc2bb27163dcea24b"
 		}
 	]
 }
