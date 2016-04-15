@@ -36,8 +36,12 @@ func (c *context) createStat(rw http.ResponseWriter, req *http.Request) {
 		now := time.Now().Unix()
 
 		for _, s := range stats {
-			if s.Timestamp == 0 {
+			if s.Timestamp <= 0 {
 				s.Timestamp = now
+			}
+
+			if s.Value < 0 {
+				s.Value = 0
 			}
 		}
 	}
@@ -89,6 +93,11 @@ func (c *context) createStatGet(rw http.ResponseWriter, req *http.Request) {
 			httputil.BadRequestError(rw, fmt.Sprintf("bad value part %s %s", value, err))
 			return
 		}
+
+		if v < 0 {
+			v = 0.0
+		}
+
 		stats[i].Value = v
 	}
 
@@ -105,6 +114,11 @@ func (c *context) createStatGet(rw http.ResponseWriter, req *http.Request) {
 			httputil.BadRequestError(rw, "bad timestamp part")
 			return
 		}
+
+		if t < 0 {
+			t = 0
+		}
+
 		stats[i].Timestamp = t
 	}
 
