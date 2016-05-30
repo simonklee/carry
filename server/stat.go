@@ -7,6 +7,8 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"net"
 	"net/http"
 	"strconv"
 	"time"
@@ -27,7 +29,12 @@ func (c *context) createStat(rw http.ResponseWriter, req *http.Request) {
 	err := d.Decode(&stats)
 
 	if err != nil {
-		log.Error(err)
+		operr, ok := err.(*net.OpError)
+		if !(ok && operr.Temporary()) && err != io.EOF {
+			log.Error(err)
+		} else {
+			log.Print(err)
+		}
 		httputil.ServeJSONCodeError(rw, "JSON Decode Error", http.StatusBadRequest)
 		return
 	}
