@@ -31,7 +31,7 @@ func (c *context) createStat(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		operr, ok := err.(*net.OpError)
 		if !(ok && operr.Temporary()) && err != io.EOF {
-			log.Error(err)
+			log.Errorf("%#v err: %v\n", err)
 		} else {
 			log.Print(err)
 		}
